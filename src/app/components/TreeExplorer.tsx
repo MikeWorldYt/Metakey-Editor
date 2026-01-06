@@ -63,6 +63,11 @@ export function TreeExplorer({ items, selectedId, onSelect, expandedAll }: TreeE
           }`}
           style={{ paddingLeft: `${depth * 20 + 8}px` }}
           onClick={() => onSelect(item.id)}
+          onDoubleClick={() => {
+            if (hasChildren) {
+              toggleExpand(item.id);
+            }
+          }}
         >
           {hasChildren ? (
             <button
