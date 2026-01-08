@@ -95,7 +95,7 @@ export function TreeExplorer({ items, selectedId, onSelect, expandedAll }: TreeE
           ) : (
             <div className="w-4 h-4 ml-0.5 bg-neutral-400 rounded-sm" />
           )}
-          <span className="text-sm select-none">{item.name}</span>
+          <span className={`text-sm select-none ${item.isGlobal ? 'font-bold' : ''}`}>{item.name}</span>
         </div>
         {hasChildren && isExpanded && (
           <div>
