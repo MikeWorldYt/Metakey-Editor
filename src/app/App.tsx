@@ -5,309 +5,11 @@ import {
   TreeItem,
 } from "./components/TreeExplorer";
 import { PropertiesPanel } from "./components/PropertiesPanel";
+import { convertFromOriginalFormat, convertToOriginalFormat, OriginalJsonItem } from "./utils/dataConverter";
+import originalData from "./data/treedata.json";
 
-// Sample data structure with 3 levels
-const initialData: TreeItem[] = [
-  {
-    id: "1",
-    name: "PERSONAL",
-    level: 1,
-    isGlobal: false,
-    variants: [],
-    children: [
-      {
-        id: "1-1",
-        name: "Documentation",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "1-1-1",
-            name: "Identidity",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Passport",
-              "License",
-              "ID Card",
-              "Your Name"
-            ],
-          },
-          {
-            id: "1-1-2",
-            name: "Hosehold",
-            level: 3,
-            isGlobal: false,
-            variants: [],
-          },
-        ],
-      },
-      {
-        id: "1-2",
-        name: "Personal Gallery",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "1-2-1",
-            name: "Family",
-            level: 3,
-            isGlobal: false,
-            variants: [],
-          },
-          {
-            id: "1-2-2",
-            name: "Travels",
-            level: 3,
-            isGlobal: false,
-            variants: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "WORK",
-    level: 1,
-    isGlobal: false,
-    variants: [],
-    children: [
-      {
-        id: "2-1",
-        name: "Documentation",
-        level: 2,
-        isGlobal: true,
-        variants: [],
-        children: [
-          {
-            id: "2-1-1",
-            name: "Incident Reports",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Hardware Failure",
-              "Software Bug",
-              "Network Outage",
-              "User Error"
-            ],
-          },
-          {
-            id: "2-1-2",
-            name: "Maintenance Logs",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Scheduled Check",
-              "Firmware Update",
-              "Driver Install",
-              "Thermal Inspection",
-              "Security Audit"
-            ],
-          },
-          {
-            id: "2-1-3",
-            name: "Client Profiles",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Company Name",
-              "Contact Info",
-              "Device Inventory",
-              "Service History"
-            ],
-          },
-        ],
-      },
-      {
-        id: "2-2",
-        name: "Software Tools",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "2-2-1",
-            name: "Diagnostic Tools",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Procmon",
-              "Sysmon",
-              "Wireshark",
-              "PowerShell",
-              "Diagnostic",
-            ],
-          },
-          {
-            id: "2-2-2",
-            name: "Remote Support SS",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "TeamViewer",
-              "AnyDesk",
-              "Remote Support",
-              "Screenshot"
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "COLLEGE",
-    level: 1,
-    isGlobal: false,
-    variants: [],
-    children: [
-      {
-        id: "3-1",
-        name: "Courses",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "3-1-1",
-            name: "Statistics",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Probability",
-              "Regression",
-              "Hypothesis Testing",
-              "Bayesian Methods"
-            ],
-          },
-          {
-            id: "3-1-2",
-            name: "Machine Learning",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Supervised Learning",
-              "Unsupervised Learning",
-              "Neural Networks",
-              "Model Evaluation"
-            ],
-          },
-        ],
-      },
-      {
-        id: "3-2",
-        name: "Tools",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "3-2-1",
-            name: "Programming",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Python",
-              "R",
-              "SQL",
-              "Julia"
-            ],
-          },
-          {
-            id: "3-2-2",
-            name: "Libraries",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Pandas",
-              "NumPy",
-              "Scikit-learn",
-              "TensorFlow"
-            ],
-          },
-        ],
-      },
-      {
-        id: "3-3",
-        name: "Projects",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "3-3-1",
-            name: "Data Analysis",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Survey Data",
-              "Financial Data",
-              "Health Data",
-              "Social Media Data"
-            ],
-          },
-          {
-            id: "3-3-2",
-            name: "Capstone",
-            level: 3,
-            isGlobal: true,
-            variants: [
-              "Predictive Model",
-              "Recommendation System",
-              "Classification Task",
-              "Visualization Dashboard"
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "4",
-    name: "HOBBIES",
-    level: 1,
-    isGlobal: false,
-    variants: [],
-    children: [
-      {
-        id: "4-1",
-        name: "Steam Games",
-        level: 2,
-        isGlobal: false,
-        variants: [],
-        children: [
-          {
-            id: "4-1-1",
-            name: "Blue Archive",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Story Mode",
-              "Character Collection",
-              "Events",
-              "PvP"
-            ],
-          },
-          {
-            id: "4-1-2",
-            name: "Counter-Strike 2",
-            level: 3,
-            isGlobal: false,
-            variants: [
-              "Competitive",
-              "Casual",
-              "Deathmatch",
-              "Workshop Maps"
-            ],
-          },
-        ],
-      },
-    ],
-  }
-];
+// Convert the imported JSON data to TreeItem format
+const initialData: TreeItem[] = convertFromOriginalFormat(originalData as OriginalJsonItem[]);
 
 export default function App() {
   const [data, setData] = useState<TreeItem[]>(initialData);
@@ -367,16 +69,60 @@ export default function App() {
 
   // Toolbar handlers
   const handleOpen = () => {
-    alert("Open functionality would load a file here");
+    // Create a file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const jsonData = JSON.parse(event.target?.result as string);
+            const convertedData = convertFromOriginalFormat(jsonData);
+            setData(convertedData);
+            setSelectedId(null); // Clear selection when loading new data
+            alert(`Successfully loaded: ${file.name}`);
+          } catch (error) {
+            alert(`Error loading file: ${error}`);
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
   };
 
   const handleSave = () => {
-    alert("Save functionality would save the current data");
-    console.log("Data to save:", data);
+    // Convert data back to original format and save
+    const originalFormat = convertToOriginalFormat(data);
+    const jsonString = JSON.stringify(originalFormat, null, 2);
+    
+    // Create a blob and download it
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lib_keyword.json';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleSaveAs = () => {
-    alert("Save As functionality would save to a new file");
+    const filename = prompt("Enter filename:", "lib_keyword.json");
+    if (filename) {
+      const originalFormat = convertToOriginalFormat(data);
+      const jsonString = JSON.stringify(originalFormat, null, 2);
+      
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename.endsWith('.json') ? filename : `${filename}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   const handleAdd = () => {

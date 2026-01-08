@@ -1,0 +1,243 @@
+[
+  {
+    "word": "PERSONAL",
+    "glob": false,
+    "vars": [],
+    "cat": [
+      {
+        "word": "Documentation",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Identidity",
+            "glob": true,
+            "vars": [
+              "Passport",
+              "License",
+              "ID Card",
+              "Your Name"
+            ]
+          },
+          {
+            "word": "Hosehold",
+            "glob": false,
+            "vars": []
+          }
+        ]
+      },
+      {
+        "word": "Personal Gallery",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Family",
+            "glob": false,
+            "vars": []
+          },
+          {
+            "word": "Travels",
+            "glob": false,
+            "vars": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "word": "WORK",
+    "glob": false,
+    "vars": [],
+    "cat": [
+      {
+        "word": "Documentation",
+        "glob": true,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Incident Reports",
+            "glob": false,
+            "vars": [
+              "Hardware Failure",
+              "Software Bug",
+              "Network Outage",
+              "User Error"
+            ]
+          },
+          {
+            "word": "Maintenance Logs",
+            "glob": false,
+            "vars": [
+              "Scheduled Check",
+              "Firmware Update",
+              "Driver Install",
+              "Thermal Inspection",
+              "Security Audit"
+            ]
+          },
+          {
+            "word": "Client Profiles",
+            "glob": true,
+            "vars": [
+              "Company Name",
+              "Contact Info",
+              "Device Inventory",
+              "Service History"
+            ]
+          }
+        ]
+      },
+      {
+        "word": "Software Tools",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Diagnostic Tools",
+            "glob": true,
+            "vars": [
+              "Procmon",
+              "Sysmon",
+              "Wireshark",
+              "PowerShell",
+              "Diagnostic"
+            ]
+          },
+          {
+            "word": "Remote Support SS",
+            "glob": true,
+            "vars": [
+              "TeamViewer",
+              "AnyDesk",
+              "Remote Support",
+              "Screenshot"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "word": "COLLEGE",
+    "glob": false,
+    "vars": [],
+    "cat": [
+      {
+        "word": "Courses",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Statistics",
+            "glob": false,
+            "vars": [
+              "Probability",
+              "Regression",
+              "Hypothesis Testing",
+              "Bayesian Methods"
+            ]
+          },
+          {
+            "word": "Machine Learning",
+            "glob": true,
+            "vars": [
+              "Supervised Learning",
+              "Unsupervised Learning",
+              "Neural Networks",
+              "Model Evaluation"
+            ]
+          }
+        ]
+      },
+      {
+        "word": "Tools",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Programming",
+            "glob": true,
+            "vars": [
+              "Python",
+              "R",
+              "SQL",
+              "Julia"
+            ]
+          },
+          {
+            "word": "Libraries",
+            "glob": false,
+            "vars": [
+              "Pandas",
+              "NumPy",
+              "Scikit-learn",
+              "TensorFlow"
+            ]
+          }
+        ]
+      },
+      {
+        "word": "Projects",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Data Analysis",
+            "glob": false,
+            "vars": [
+              "Survey Data",
+              "Financial Data",
+              "Health Data",
+              "Social Media Data"
+            ]
+          },
+          {
+            "word": "Capstone",
+            "glob": true,
+            "vars": [
+              "Predictive Model",
+              "Recommendation System",
+              "Classification Task",
+              "Visualization Dashboard"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "word": "HOBBIES",
+    "glob": false,
+    "vars": [],
+    "cat": [
+      {
+        "word": "Steam Games",
+        "glob": false,
+        "vars": [],
+        "subcat": [
+          {
+            "word": "Blue Archive",
+            "glob": false,
+            "vars": [
+              "Story Mode",
+              "Character Collection",
+              "Events",
+              "PvP"
+            ]
+          },
+          {
+            "word": "Counter-Strike 2",
+            "glob": false,
+            "vars": [
+              "Competitive",
+              "Casual",
+              "Deathmatch",
+              "Workshop Maps"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
