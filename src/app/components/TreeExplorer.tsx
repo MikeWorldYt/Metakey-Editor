@@ -15,39 +15,20 @@ interface TreeExplorerProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   expandedAll: boolean;
+  expandedIds: Set<string>;
+  onToggleExpand: (expandedIds: Set<string>) => void;
 }
 
-export function TreeExplorer({ items, selectedId, onSelect, expandedAll }: TreeExplorerProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (expandedAll) {
-      const allIds = new Set<string>();
-      const collectIds = (items: TreeItem[]) => {
-        items.forEach(item => {
-          if (item.children && item.children.length > 0) {
-            allIds.add(item.id);
-            collectIds(item.children);
-          }
-        });
-      };
-      collectIds(items);
-      setExpandedIds(allIds);
-    } else {
-      setExpandedIds(new Set());
-    }
-  }, [expandedAll, items]);
+export function TreeExplorer({ items, selectedId, onSelect, expandedAll, expandedIds, onToggleExpand }: TreeExplorerProps) {
 
   const toggleExpand = (id: string) => {
-    setExpandedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+    const next = new Set(expandedIds);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    onToggleExpand(next);
   };
 
   const renderItem = (item: TreeItem, depth: number = 0) => {
