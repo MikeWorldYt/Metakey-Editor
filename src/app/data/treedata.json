@@ -25,31 +25,31 @@
     }
   },
   "WORK": {
-    "glob": false,
-    "Documentation": {
+    "glob": true,
+    "CorporateName": {
       "cat": [{ "glob": true }],
-      "Incident Reports": {
-        "subcat": [{ "glob": false, "word": "Incidents", "vars": ["Hardware Failure", "Software Bug", "Network Outage", "User Error"] }],
-        "key": []
+      "Job": {
+        "subcat": [{ "glob": true, "word": "Job", "vars": ["corporate name", "corp name", "CONNAM"] }],
+        "key": [
+          { "glob": false, "word": "Noname Client", "vars": [ "customer", "client" ] },
+          { "glob": true, "word": "Arnold Mael", "vars": [ "Arnold Mael" ] },
+          { "glob": true, "word": "Javier Hernandez", "vars": [ "Javier Hernandez" ] },
+          { "glob": true, "word": "Carl Anderson", "vars": [ "Carl Anderson" ] },
+          { "glob": true, "word": "Diana Lee", "vars": [ "Diana Lee" ] }
+        ]
       },
-      "Maintenance Logs": {
-        "subcat": [{ "glob": false, "word": "Maintenance", "vars": ["Scheduled Check", "Firmware Update", "Driver Install", "Thermal Inspection", "Security Audit"] }],
-        "key": []
-      },
-      "Client Profiles": {
-        "subcat": [{ "glob": true, "word": "Client Info", "vars": ["Company Name", "Contact Info", "Device Inventory", "Service History"] }],
-        "key": []
-      }
-    },
-    "Software Tools": {
-      "cat": [{ "glob": false }],
-      "Diagnostic Tools": {
-        "subcat": [{ "glob": true, "word": "Diagnostics", "vars": ["Procmon", "Sysmon", "Wireshark", "PowerShell", "Diagnostic"] }],
-        "key": []
-      },
-      "Remote Support SS": {
-        "subcat": [{ "glob": true, "word": "Remote Tools", "vars": ["TeamViewer", "AnyDesk", "Remote Support", "Screenshot"] }],
-        "key": []
+      "Docs": {
+        "subcat": [{ "glob": false, "word": "Docs", "vars": ["documentation", "docs"] }],
+        "key": [
+          { "glob": true, "word": "RCAR", "vars": ["Post-Mortem", "Root Cause Analysis", "Root Cause Analysis Report" ] },
+          { "glob": true, "word": "IR", "vars": ["Incident report", "incident"] },
+          { "glob": true, "word": "MTN_Rec", "vars": ["maintenance log", "maintenance record", "maintenance", "Logs Ops" ] },
+          { "glob": true, "word": "HWR", "vars": ["Hardware Report", "Hardware"] },
+          { "glob": true, "word": "SecAudit", "vars": ["Security Audit", "Security"] },
+          { "glob": true, "word": "Vuln_Scan", "vars": ["Vulnerability Scan", "Vuln Scan"] },
+          { "glob": true, "word": "INV", "vars": [ "Device Inventory", "Inventory" ] },
+          { "glob": true, "word": "SCH_AUD", "vars": ["Schedule Audit", "Schedule Checks"] }
+        ]
       }
     }
   },
