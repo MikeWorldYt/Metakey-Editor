@@ -255,7 +255,24 @@ export default function App() {
   };
 
   const handleAdd = () => {
-    const newItemName = prompt("Enter new item name:", "New Item");
+    // Determine what type of item we're creating based on selection
+    let itemType = "Main Category";
+    let defaultName = "New Main Category";
+    
+    if (selectedItem) {
+      if (selectedItem.level === 1) {
+        itemType = "Category";
+        defaultName = "New Category";
+      } else if (selectedItem.level === 2) {
+        itemType = "Subcategory";
+        defaultName = "New Subcategory";
+      } else if (selectedItem.level === 3 || selectedItem.level === 4) {
+        itemType = "Key";
+        defaultName = "New Key";
+      }
+    }
+    
+    const newItemName = prompt(`Enter new ${itemType} name:`, defaultName);
     if (newItemName) {
       const result = addChildOrSiblingItem(data, selectedId, newItemName);
       if (result) {
@@ -273,13 +290,12 @@ export default function App() {
   };
 
   const handleDelete = () => {
-    if (
-      selectedId &&
-      confirm("Are you sure you want to delete this item?")
-    ) {
-      const newData = deleteItemById(data, selectedId);
-      setData(newData);
-      setSelectedId(null);
+    if (selectedId && selectedItem) {
+      if (confirm(`Are you sure you want to delete "${selectedItem.name}"?`)) {
+        const newData = deleteItemById(data, selectedId);
+        setData(newData);
+        setSelectedId(null);
+      }
     }
   };
 
