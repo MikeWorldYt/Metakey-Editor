@@ -5,11 +5,11 @@ import {
   TreeItem,
 } from "./components/TreeExplorer";
 import { PropertiesPanel } from "./components/PropertiesPanel";
-import { convertFromOriginalFormat, convertToOriginalFormat, OriginalJsonItem } from "./utils/dataConverter";
+import { convertFromOriginalFormat, convertToOriginalFormat, OriginalJsonFormat } from "./utils/dataConverter";
 import originalData from "./data/treedata.json";
 
 // Convert the imported JSON data to TreeItem format
-const initialData: TreeItem[] = convertFromOriginalFormat(originalData as OriginalJsonItem[]);
+const initialData: TreeItem[] = convertFromOriginalFormat(originalData as OriginalJsonFormat);
 
 export default function App() {
   const [data, setData] = useState<TreeItem[]>(initialData);
