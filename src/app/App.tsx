@@ -18,6 +18,17 @@ export default function App() {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [expandedAll, setExpandedAll] = useState(false);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
+    // Load expanded state from localStorage
+    const saved = localStorage.getItem('treeExpandedIds');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  // Save expanded state to localStorage whenever it changes
+  const updateExpandedIds = (newExpandedIds: Set<string>) => {
+    setExpandedIds(newExpandedIds);
+    localStorage.setItem('treeExpandedIds', JSON.stringify(Array.from(newExpandedIds)));
+  };
 
   // Find selected item in the tree
   const findItemById = (
@@ -76,96 +87,104 @@ export default function App() {
       });
   };
 
-  // Find parent and add sibling item
-  const addSiblingItem = (
+  // Add child item to selected parent OR add sibling for level 4 items
+  const addChildOrSiblingItem = (
     items: TreeItem[],
-    selectedId: string,
+    selectedId: string | null,
     newItemName: string,
-  ): TreeItem[] | null => {
-    // Find the selected item and its parent
-    const findItemAndParent = (
+  ): { newData: TreeItem[]; newItemId: string } | null => {
+    // If no selection, create a new level 1 item
+    if (!selectedId) {
+      const maxId = Math.max(0, ...items.map(i => parseInt(i.id) || 0));
+      const newId = `${maxId + 1}`;
+      const newItem: TreeItem = {
+        id: newId,
+        name: newItemName,
+        level: 1,
+        isGlobal: false,
+        children: [],
+      };
+      return { newData: [...items, newItem], newItemId: newId };
+    }
+
+    let newItemId = '';
+
+    const findAndAddChild = (
       items: TreeItem[],
-      id: string,
-      parent: TreeItem | null = null,
-    ): { item: TreeItem; parent: TreeItem | null; siblings: TreeItem[] } | null => {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.id === id) {
-          return { item, parent, siblings: items };
-        }
-        if (item.children) {
-          const found = findItemAndParent(item.children, id, item);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-
-    const result = findItemAndParent(items, selectedId);
-    if (!result) return null;
-
-    const { item: selectedItem, siblings } = result;
-    
-    // Generate new ID based on level
-    const generateNewId = (level: number): string => {
-      if (level === 1) {
-        // Main category - find highest number
-        const maxId = Math.max(...items.map(i => parseInt(i.id) || 0));
-        return `${maxId + 1}`;
-      } else {
-        // For nested items, use the parent ID prefix and increment
-        const idParts = selectedItem.id.split('-');
-        const parentPrefix = idParts.slice(0, -1).join('-');
-        const currentIndex = parseInt(idParts[idParts.length - 1]);
-        
-        // Find all siblings with same parent prefix
-        const siblingIds = siblings
-          .map(s => s.id)
-          .filter(id => id.startsWith(parentPrefix + '-'));
-        
-        const maxSiblingIndex = Math.max(
-          ...siblingIds.map(id => {
-            const parts = id.split('-');
-            return parseInt(parts[parts.length - 1]) || 0;
-          })
-        );
-        
-        return `${parentPrefix}-${maxSiblingIndex + 1}`;
-      }
-    };
-
-    // Create new item based on level
-    const newItem: TreeItem = {
-      id: generateNewId(selectedItem.level),
-      name: newItemName,
-      level: selectedItem.level,
-      isGlobal: false,
-      variants: selectedItem.level >= 3 ? [] : undefined, // Only level 3 and 4 have variants
-      children: selectedItem.level < 4 ? [] : undefined, // Only level 1-3 can have children
-    };
-
-    // Insert the new item after the selected item
-    const insertNewItem = (items: TreeItem[]): TreeItem[] => {
-      const newItems: TreeItem[] = [];
-      for (const item of items) {
-        if (item.id === selectedId) {
-          newItems.push(item);
-          newItems.push(newItem);
-        } else {
-          if (item.children) {
-            newItems.push({
-              ...item,
-              children: insertNewItem(item.children),
-            });
-          } else {
-            newItems.push(item);
+      targetId: string,
+    ): TreeItem[] => {
+      return items.map((item) => {
+        if (item.id === targetId) {
+          // For level 4 items, add sibling instead of child
+          if (item.level === 4) {
+            // This case is handled by parent recursion
+            return item;
           }
+          
+          // Add as child for levels 1-3
+          const childLevel = item.level + 1;
+          const existingChildren = item.children || [];
+          const maxChildIndex = existingChildren.length > 0
+            ? Math.max(...existingChildren.map(c => {
+                const parts = c.id.split('-');
+                return parseInt(parts[parts.length - 1]) || 0;
+              }))
+            : 0;
+          
+          newItemId = `${item.id}-${maxChildIndex + 1}`;
+          const newChild: TreeItem = {
+            id: newItemId,
+            name: newItemName,
+            level: childLevel,
+            isGlobal: false,
+            variants: childLevel >= 3 ? [] : undefined,
+            children: childLevel < 4 ? [] : undefined,
+          };
+          
+          return {
+            ...item,
+            children: [...existingChildren, newChild],
+          };
         }
-      }
-      return newItems;
+        
+        if (item.children) {
+          const updatedChildren = findAndAddChild(item.children, targetId);
+          
+          // Check if we need to add sibling for level 4 item
+          const targetChild = item.children.find(c => c.id === targetId);
+          if (targetChild && targetChild.level === 4) {
+            const maxSiblingIndex = Math.max(...item.children.map(c => {
+              const parts = c.id.split('-');
+              return parseInt(parts[parts.length - 1]) || 0;
+            }));
+            
+            newItemId = `${item.id}-${maxSiblingIndex + 1}`;
+            const newSibling: TreeItem = {
+              id: newItemId,
+              name: newItemName,
+              level: 4,
+              isGlobal: false,
+              variants: [],
+            };
+            
+            return {
+              ...item,
+              children: [...updatedChildren, newSibling],
+            };
+          }
+          
+          return {
+            ...item,
+            children: updatedChildren,
+          };
+        }
+        
+        return item;
+      });
     };
 
-    return insertNewItem(items);
+    const newData = findAndAddChild(items, selectedId);
+    return newItemId ? { newData, newItemId } : null;
   };
 
   const selectedItem = selectedId
@@ -236,31 +255,19 @@ export default function App() {
   };
 
   const handleAdd = () => {
-    if (!selectedId) {
-      alert("Please select an item first");
-      return;
-    }
-    
-    const selectedItem = findItemById(data, selectedId);
-    if (!selectedItem) return;
-    
-    // Get default name based on level
-    const getDefaultName = (level: number): string => {
-      switch (level) {
-        case 1: return "New Main Category";
-        case 2: return "New Category";
-        case 3: return "New Subcategory";
-        case 4: return "New Item";
-        default: return "New Item";
-      }
-    };
-    
-    const newItemName = prompt("Enter new item name:", getDefaultName(selectedItem.level));
+    const newItemName = prompt("Enter new item name:", "New Item");
     if (newItemName) {
-      const newData = addSiblingItem(data, selectedId, newItemName);
-      if (newData) {
-        setData(newData);
-        // Keep the current selection or select the newly added item if needed
+      const result = addChildOrSiblingItem(data, selectedId, newItemName);
+      if (result) {
+        setData(result.newData);
+        setSelectedId(result.newItemId);
+        
+        // Auto-expand the parent when adding a child
+        if (selectedId && selectedItem && selectedItem.level < 4) {
+          const newExpanded = new Set(expandedIds);
+          newExpanded.add(selectedId);
+          updateExpandedIds(newExpanded);
+        }
       }
     }
   };
@@ -277,7 +284,26 @@ export default function App() {
   };
 
   const handleExpandCollapseAll = () => {
-    setExpandedAll(!expandedAll);
+    const newExpandedAll = !expandedAll;
+    setExpandedAll(newExpandedAll);
+    
+    if (newExpandedAll) {
+      // Expand all
+      const allIds = new Set<string>();
+      const collectIds = (items: TreeItem[]) => {
+        items.forEach(item => {
+          if (item.children && item.children.length > 0) {
+            allIds.add(item.id);
+            collectIds(item.children);
+          }
+        });
+      };
+      collectIds(data);
+      updateExpandedIds(allIds);
+    } else {
+      // Collapse all
+      updateExpandedIds(new Set());
+    }
   };
 
   const handleFind = () => {
@@ -352,6 +378,8 @@ export default function App() {
             selectedId={selectedId}
             onSelect={setSelectedId}
             expandedAll={expandedAll}
+            expandedIds={expandedIds}
+            onToggleExpand={updateExpandedIds}
           />
         </div>
 
