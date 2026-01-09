@@ -1,243 +1,106 @@
-[
-  {
-    "word": "PERSONAL",
+{
+  "PERSONAL": {
     "glob": false,
-    "vars": [],
-    "cat": [
-      {
-        "word": "Documentation",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Identidity",
-            "glob": true,
-            "vars": [
-              "Passport",
-              "License",
-              "ID Card",
-              "Your Name"
-            ]
-          },
-          {
-            "word": "Hosehold",
-            "glob": false,
-            "vars": []
-          }
-        ]
+    "Documentation": {
+      "cat": [{ "glob": false }],
+      "Identidity": {
+        "subcat": [{ "glob": true, "word": "Personal ID", "vars": ["Passport", "License", "ID Card", "Your Name"] }],
+        "key": []
       },
-      {
-        "word": "Personal Gallery",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Family",
-            "glob": false,
-            "vars": []
-          },
-          {
-            "word": "Travels",
-            "glob": false,
-            "vars": []
-          }
-        ]
+      "Hosehold": {
+        "subcat": [{ "glob": false, "word": "Household Items", "vars": [] }],
+        "key": []
       }
-    ]
+    },
+    "Personal Gallery": {
+      "cat": [{ "glob": false }],
+      "Family": {
+        "subcat": [{ "glob": false, "word": "Family Photos", "vars": [] }],
+        "key": []
+      },
+      "Travels": {
+        "subcat": [{ "glob": false, "word": "Travel Photos", "vars": [] }],
+        "key": []
+      }
+    }
   },
-  {
-    "word": "WORK",
+  "WORK": {
     "glob": false,
-    "vars": [],
-    "cat": [
-      {
-        "word": "Documentation",
-        "glob": true,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Incident Reports",
-            "glob": false,
-            "vars": [
-              "Hardware Failure",
-              "Software Bug",
-              "Network Outage",
-              "User Error"
-            ]
-          },
-          {
-            "word": "Maintenance Logs",
-            "glob": false,
-            "vars": [
-              "Scheduled Check",
-              "Firmware Update",
-              "Driver Install",
-              "Thermal Inspection",
-              "Security Audit"
-            ]
-          },
-          {
-            "word": "Client Profiles",
-            "glob": true,
-            "vars": [
-              "Company Name",
-              "Contact Info",
-              "Device Inventory",
-              "Service History"
-            ]
-          }
-        ]
+    "Documentation": {
+      "cat": [{ "glob": true }],
+      "Incident Reports": {
+        "subcat": [{ "glob": false, "word": "Incidents", "vars": ["Hardware Failure", "Software Bug", "Network Outage", "User Error"] }],
+        "key": []
       },
-      {
-        "word": "Software Tools",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Diagnostic Tools",
-            "glob": true,
-            "vars": [
-              "Procmon",
-              "Sysmon",
-              "Wireshark",
-              "PowerShell",
-              "Diagnostic"
-            ]
-          },
-          {
-            "word": "Remote Support SS",
-            "glob": true,
-            "vars": [
-              "TeamViewer",
-              "AnyDesk",
-              "Remote Support",
-              "Screenshot"
-            ]
-          }
-        ]
+      "Maintenance Logs": {
+        "subcat": [{ "glob": false, "word": "Maintenance", "vars": ["Scheduled Check", "Firmware Update", "Driver Install", "Thermal Inspection", "Security Audit"] }],
+        "key": []
+      },
+      "Client Profiles": {
+        "subcat": [{ "glob": true, "word": "Client Info", "vars": ["Company Name", "Contact Info", "Device Inventory", "Service History"] }],
+        "key": []
       }
-    ]
+    },
+    "Software Tools": {
+      "cat": [{ "glob": false }],
+      "Diagnostic Tools": {
+        "subcat": [{ "glob": true, "word": "Diagnostics", "vars": ["Procmon", "Sysmon", "Wireshark", "PowerShell", "Diagnostic"] }],
+        "key": []
+      },
+      "Remote Support SS": {
+        "subcat": [{ "glob": true, "word": "Remote Tools", "vars": ["TeamViewer", "AnyDesk", "Remote Support", "Screenshot"] }],
+        "key": []
+      }
+    }
   },
-  {
-    "word": "COLLEGE",
+  "COLLEGE": {
     "glob": false,
-    "vars": [],
-    "cat": [
-      {
-        "word": "Courses",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Statistics",
-            "glob": false,
-            "vars": [
-              "Probability",
-              "Regression",
-              "Hypothesis Testing",
-              "Bayesian Methods"
-            ]
-          },
-          {
-            "word": "Machine Learning",
-            "glob": true,
-            "vars": [
-              "Supervised Learning",
-              "Unsupervised Learning",
-              "Neural Networks",
-              "Model Evaluation"
-            ]
-          }
-        ]
+    "Courses": {
+      "cat": [{ "glob": false }],
+      "Statistics": {
+        "subcat": [{ "glob": false, "word": "Stats Topics", "vars": ["Probability", "Regression", "Hypothesis Testing", "Bayesian Methods"] }],
+        "key": []
       },
-      {
-        "word": "Tools",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Programming",
-            "glob": true,
-            "vars": [
-              "Python",
-              "R",
-              "SQL",
-              "Julia"
-            ]
-          },
-          {
-            "word": "Libraries",
-            "glob": false,
-            "vars": [
-              "Pandas",
-              "NumPy",
-              "Scikit-learn",
-              "TensorFlow"
-            ]
-          }
-        ]
-      },
-      {
-        "word": "Projects",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Data Analysis",
-            "glob": false,
-            "vars": [
-              "Survey Data",
-              "Financial Data",
-              "Health Data",
-              "Social Media Data"
-            ]
-          },
-          {
-            "word": "Capstone",
-            "glob": true,
-            "vars": [
-              "Predictive Model",
-              "Recommendation System",
-              "Classification Task",
-              "Visualization Dashboard"
-            ]
-          }
-        ]
+      "Machine Learning": {
+        "subcat": [{ "glob": true, "word": "ML Topics", "vars": ["Supervised Learning", "Unsupervised Learning", "Neural Networks", "Model Evaluation"] }],
+        "key": []
       }
-    ]
+    },
+    "Tools": {
+      "cat": [{ "glob": false }],
+      "Programming": {
+        "subcat": [{ "glob": true, "word": "Languages", "vars": ["Python", "R", "SQL", "Julia"] }],
+        "key": []
+      },
+      "Libraries": {
+        "subcat": [{ "glob": false, "word": "Data Science Libs", "vars": ["Pandas", "NumPy", "Scikit-learn", "TensorFlow"] }],
+        "key": []
+      }
+    },
+    "Projects": {
+      "cat": [{ "glob": false }],
+      "Data Analysis": {
+        "subcat": [{ "glob": false, "word": "Analysis Types", "vars": ["Survey Data", "Financial Data", "Health Data", "Social Media Data"] }],
+        "key": []
+      },
+      "Capstone": {
+        "subcat": [{ "glob": true, "word": "Capstone Projects", "vars": ["Predictive Model", "Recommendation System", "Classification Task", "Visualization Dashboard"] }],
+        "key": []
+      }
+    }
   },
-  {
-    "word": "HOBBIES",
+  "HOBBIES": {
     "glob": false,
-    "vars": [],
-    "cat": [
-      {
-        "word": "Steam Games",
-        "glob": false,
-        "vars": [],
-        "subcat": [
-          {
-            "word": "Blue Archive",
-            "glob": false,
-            "vars": [
-              "Story Mode",
-              "Character Collection",
-              "Events",
-              "PvP"
-            ]
-          },
-          {
-            "word": "Counter-Strike 2",
-            "glob": false,
-            "vars": [
-              "Competitive",
-              "Casual",
-              "Deathmatch",
-              "Workshop Maps"
-            ]
-          }
-        ]
+    "Steam Games": {
+      "cat": [{ "glob": false }],
+      "Blue Archive": {
+        "subcat": [{ "glob": false, "word": "BA Content", "vars": ["Story Mode", "Character Collection", "Events", "PvP"] }],
+        "key": []
+      },
+      "Counter-Strike 2": {
+        "subcat": [{ "glob": false, "word": "CS2 Modes", "vars": ["Competitive", "Casual", "Deathmatch", "Workshop Maps"] }],
+        "key": []
       }
-    ]
+    }
   }
-]
+}
