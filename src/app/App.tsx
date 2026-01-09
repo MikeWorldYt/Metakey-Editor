@@ -58,6 +58,116 @@ export default function App() {
     });
   };
 
+  // Delete item from the tree
+  const deleteItemById = (
+    items: TreeItem[],
+    id: string,
+  ): TreeItem[] => {
+    return items
+      .filter((item) => item.id !== id)
+      .map((item) => {
+        if (item.children) {
+          return {
+            ...item,
+            children: deleteItemById(item.children, id),
+          };
+        }
+        return item;
+      });
+  };
+
+  // Find parent and add sibling item
+  const addSiblingItem = (
+    items: TreeItem[],
+    selectedId: string,
+    newItemName: string,
+  ): TreeItem[] | null => {
+    // Find the selected item and its parent
+    const findItemAndParent = (
+      items: TreeItem[],
+      id: string,
+      parent: TreeItem | null = null,
+    ): { item: TreeItem; parent: TreeItem | null; siblings: TreeItem[] } | null => {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.id === id) {
+          return { item, parent, siblings: items };
+        }
+        if (item.children) {
+          const found = findItemAndParent(item.children, id, item);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const result = findItemAndParent(items, selectedId);
+    if (!result) return null;
+
+    const { item: selectedItem, siblings } = result;
+    
+    // Generate new ID based on level
+    const generateNewId = (level: number): string => {
+      if (level === 1) {
+        // Main category - find highest number
+        const maxId = Math.max(...items.map(i => parseInt(i.id) || 0));
+        return `${maxId + 1}`;
+      } else {
+        // For nested items, use the parent ID prefix and increment
+        const idParts = selectedItem.id.split('-');
+        const parentPrefix = idParts.slice(0, -1).join('-');
+        const currentIndex = parseInt(idParts[idParts.length - 1]);
+        
+        // Find all siblings with same parent prefix
+        const siblingIds = siblings
+          .map(s => s.id)
+          .filter(id => id.startsWith(parentPrefix + '-'));
+        
+        const maxSiblingIndex = Math.max(
+          ...siblingIds.map(id => {
+            const parts = id.split('-');
+            return parseInt(parts[parts.length - 1]) || 0;
+          })
+        );
+        
+        return `${parentPrefix}-${maxSiblingIndex + 1}`;
+      }
+    };
+
+    // Create new item based on level
+    const newItem: TreeItem = {
+      id: generateNewId(selectedItem.level),
+      name: newItemName,
+      level: selectedItem.level,
+      isGlobal: false,
+      variants: selectedItem.level >= 3 ? [] : undefined, // Only level 3 and 4 have variants
+      children: selectedItem.level < 4 ? [] : undefined, // Only level 1-3 can have children
+    };
+
+    // Insert the new item after the selected item
+    const insertNewItem = (items: TreeItem[]): TreeItem[] => {
+      const newItems: TreeItem[] = [];
+      for (const item of items) {
+        if (item.id === selectedId) {
+          newItems.push(item);
+          newItems.push(newItem);
+        } else {
+          if (item.children) {
+            newItems.push({
+              ...item,
+              children: insertNewItem(item.children),
+            });
+          } else {
+            newItems.push(item);
+          }
+        }
+      }
+      return newItems;
+    };
+
+    return insertNewItem(items);
+  };
+
   const selectedItem = selectedId
     ? findItemById(data, selectedId)
     : null;
@@ -126,9 +236,33 @@ export default function App() {
   };
 
   const handleAdd = () => {
-    alert(
-      "Add functionality would create a new item. Implement dialog to specify parent and level.",
-    );
+    if (!selectedId) {
+      alert("Please select an item first");
+      return;
+    }
+    
+    const selectedItem = findItemById(data, selectedId);
+    if (!selectedItem) return;
+    
+    // Get default name based on level
+    const getDefaultName = (level: number): string => {
+      switch (level) {
+        case 1: return "New Main Category";
+        case 2: return "New Category";
+        case 3: return "New Subcategory";
+        case 4: return "New Item";
+        default: return "New Item";
+      }
+    };
+    
+    const newItemName = prompt("Enter new item name:", getDefaultName(selectedItem.level));
+    if (newItemName) {
+      const newData = addSiblingItem(data, selectedId, newItemName);
+      if (newData) {
+        setData(newData);
+        // Keep the current selection or select the newly added item if needed
+      }
+    }
   };
 
   const handleDelete = () => {
@@ -136,10 +270,9 @@ export default function App() {
       selectedId &&
       confirm("Are you sure you want to delete this item?")
     ) {
-      // Implementation for delete would go here
-      alert(
-        "Delete functionality would remove the selected item",
-      );
+      const newData = deleteItemById(data, selectedId);
+      setData(newData);
+      setSelectedId(null);
     }
   };
 
