@@ -5,6 +5,7 @@ import {
   TreeItem,
 } from "./components/TreeExplorer";
 import { PropertiesPanel } from "./components/PropertiesPanel";
+import { SearchModal } from "./components/SearchModal";
 import { convertFromOriginalFormat, convertToOriginalFormat, OriginalJsonFormat } from "./utils/dataConverter";
 import originalData from "./data/treedata.json";
 
@@ -25,6 +26,7 @@ export default function App() {
   });
   const [inlineEditingId, setInlineEditingId] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Save expanded state to localStorage whenever it changes
   const updateExpandedIds = (newExpandedIds: Set<string>) => {
@@ -354,12 +356,17 @@ export default function App() {
   };
 
   const handleFind = () => {
-    const searchTerm = prompt("Enter search term:");
-    if (searchTerm) {
-      alert(
-        `Search functionality would find items matching: ${searchTerm}`,
-      );
-    }
+    setIsSearchModalOpen(true);
+  };
+
+  const handleSearchSelectItem = (itemId: string, parentIds: string[]) => {
+    // Expand all parent paths
+    const newExpanded = new Set(expandedIds);
+    parentIds.forEach(id => newExpanded.add(id));
+    updateExpandedIds(newExpanded);
+    
+    // Select the item
+    setSelectedId(itemId);
   };
 
   const handleSelectAll = () => {
@@ -443,6 +450,14 @@ export default function App() {
           />
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        items={data}
+        onClose={() => setIsSearchModalOpen(false)}
+        onSelectItem={handleSearchSelectItem}
+      />
     </div>
   );
 }
