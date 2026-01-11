@@ -23,6 +23,8 @@ export default function App() {
     const saved = localStorage.getItem('treeExpandedIds');
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
+  const [inlineEditingId, setInlineEditingId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   // Save expanded state to localStorage whenever it changes
   const updateExpandedIds = (newExpandedIds: Set<string>) => {
@@ -256,42 +258,71 @@ export default function App() {
 
   const handleAdd = () => {
     // Determine what type of item we're creating based on selection
-    let itemType = "Main Category";
     let defaultName = "New Main Category";
     
     if (selectedItem) {
       if (selectedItem.level === 1) {
-        itemType = "Category";
         defaultName = "New Category";
       } else if (selectedItem.level === 2) {
-        itemType = "Subcategory";
         defaultName = "New Subcategory";
       } else if (selectedItem.level === 3 || selectedItem.level === 4) {
-        itemType = "Key";
         defaultName = "New Key";
       }
     }
     
-    const newItemName = prompt(`Enter new ${itemType} name:`, defaultName);
-    if (newItemName) {
-      const result = addChildOrSiblingItem(data, selectedId, newItemName);
-      if (result) {
-        setData(result.newData);
-        setSelectedId(result.newItemId);
-        
-        // Auto-expand the parent when adding a child
-        if (selectedId && selectedItem && selectedItem.level < 4) {
-          const newExpanded = new Set(expandedIds);
-          newExpanded.add(selectedId);
-          updateExpandedIds(newExpanded);
-        }
+    // Create the new item with temporary name
+    const result = addChildOrSiblingItem(data, selectedId, defaultName);
+    if (result) {
+      setData(result.newData);
+      setSelectedId(result.newItemId);
+      setInlineEditingId(result.newItemId);
+      
+      // Auto-expand the parent when adding a child
+      if (selectedId && selectedItem && selectedItem.level < 4) {
+        const newExpanded = new Set(expandedIds);
+        newExpanded.add(selectedId);
+        updateExpandedIds(newExpanded);
       }
     }
   };
 
+  const handleInlineEditComplete = (itemId: string, newName: string) => {
+    if (newName.trim()) {
+      const item = findItemById(data, itemId);
+      if (item) {
+        const updatedItem = { ...item, name: newName.trim() };
+        setData(updateItemById(data, itemId, updatedItem));
+      }
+    } else {
+      // If empty, delete the item
+      setData(deleteItemById(data, itemId));
+      setSelectedId(null);
+    }
+    setInlineEditingId(null);
+  };
+
+  const handleInlineEditCancel = (itemId: string) => {
+    // Delete the temporary item
+    setData(deleteItemById(data, itemId));
+    setInlineEditingId(null);
+    setSelectedId(null);
+  };
+
   const handleDelete = () => {
     if (selectedId && selectedItem) {
-      if (confirm(`Are you sure you want to delete "${selectedItem.name}"?`)) {
+      setPendingDeleteId(selectedId);
+      
+      // Start shake animation interval
+      const shakeInterval = setInterval(() => {
+        setPendingDeleteId(prev => prev === selectedId ? null : selectedId);
+      }, 1000);
+      
+      const confirmed = confirm(`Are you sure you want to delete "${selectedItem.name}"?`);
+      
+      clearInterval(shakeInterval);
+      setPendingDeleteId(null);
+      
+      if (confirmed) {
         const newData = deleteItemById(data, selectedId);
         setData(newData);
         setSelectedId(null);
@@ -396,6 +427,10 @@ export default function App() {
             expandedAll={expandedAll}
             expandedIds={expandedIds}
             onToggleExpand={updateExpandedIds}
+            inlineEditingId={inlineEditingId}
+            onInlineEditComplete={handleInlineEditComplete}
+            onInlineEditCancel={handleInlineEditCancel}
+            pendingDeleteId={pendingDeleteId}
           />
         </div>
 
